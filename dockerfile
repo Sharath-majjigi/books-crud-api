@@ -1,5 +1,5 @@
 # Telling to use Docker's golang ready image
-FROM golang:1.2.0-alpine3.9
+FROM golang:1.12.0-alpine3.9
 
 # Create app folder 
 RUN mkdir /app
