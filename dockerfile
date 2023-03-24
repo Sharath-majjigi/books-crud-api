@@ -8,7 +8,7 @@ ADD . /app
 # Set /app to the go folder as workdir
 WORKDIR /app
 # Generate binary file from our /app
-RUN go build -o main .
+RUN go build 
 # Expose the port 3000
 EXPOSE 8000:8000
 # Run the app binarry file 
