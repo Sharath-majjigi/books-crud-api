@@ -1,15 +1,14 @@
-# Telling to use Docker's golang ready image
 FROM golang:1.12.0-alpine3.9
 
-# Create app folder 
-RUN mkdir /app
-# Copy our file in the host contianer to our contianer
-ADD . /app
-# Set /app to the go folder as workdir
-WORKDIR /app
-# Generate binary file from our /app
-RUN go build 
-# Expose the port 3000
-EXPOSE 8000:8000
-# Run the app binarry file 
-CMD ["/app/main"]
+RUN mkdir /build
+WORKDIR /build
+
+RUN export GO111MODULE=on
+RUN go get github.com/Sharath-majjigi/books-crud-api/main
+RUN cd /build && git clone https://github.com/Sharath-majjigi/books-crud-api.git
+
+RUN cd /build/books-crud-api/main && go build
+
+EXPOSE 8000
+
+ENTRYPOINT [ "/build/books-crud-api/main/main" ]
