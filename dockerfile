@@ -1,14 +1,19 @@
-FROM golang:1.12.0-alpine3.9
+FROM golang:1.17-alpine as build-env
 
-RUN mkdir /build
-WORKDIR /build
+ENV APP_NAME books-crud-api
+ENV CMD_PATH main.go
 
-RUN export GO111MODULE=on
-RUN go get github.com/Sharath-majjigi/books-crud-api/main
-RUN cd /build && git clone https://github.com/Sharath-majjigi/books-crud-api.git
+COPY . $GOPATH/src/$APP_NAME
+WORKDIR $GOPATH/src/$APP_NAME
 
-RUN cd /build/books-crud-api/main && go build
+RUN CGO_ENABLED=O go build -v -o /$APP_NAME $GOPATH/src/$APP_NAME/$CMD_PATH
+
+FROM alpine:3.14
+
+ENV APP_NAME books-crud-api
+
+COPY --from=build-env /$APP_NAME .
 
 EXPOSE 8000
 
-ENTRYPOINT [ "/build/books-crud-api/main/main" ]
+CMD ./$APP_NAME
